@@ -1,0 +1,58 @@
+name: 'mongodb-cluster'
+
+services:
+  mongo1:
+    container_name: mongo1
+    image: bitnami/mongodb:7.0.14
+    volumes:
+      - mongo1:/bitnami/mongodb
+      - ./config/mongo1.conf:/opt/bitnami/mongodb/conf/mongodb.conf
+      - ./config/mongodb-keyfile:/opt/bitnami/mongodb/keyfile
+    networks:
+      - mongodb_network
+    ports:
+      - "27017:27017"
+    restart: always
+
+  mongo2:
+    container_name: mongo2
+    image: bitnami/mongodb:7.0.14
+    volumes:
+      - mongo2:/bitnami/mongodb
+      - ./config/mongo2.conf:/opt/bitnami/mongodb/conf/mongodb.conf
+      - ./config/mongodb-keyfile:/opt/bitnami/mongodb/keyfile
+    networks:
+      - mongodb_network
+    ports:
+      - "27018:27017"
+    restart: always
+    depends_on:
+      - mongo1
+
+  mongo3:
+    container_name: mongo3
+    image: bitnami/mongodb:7.0.14
+    volumes:
+      - mongo3:/bitnami/mongodb
+      - ./config/mongo3.conf:/opt/bitnami/mongodb/conf/mongodb.conf
+      - ./config/mongodb-keyfile:/opt/bitnami/mongodb/keyfile
+    networks:
+      - mongodb_network
+    ports:
+      - "27019:27017"
+    restart: always
+    depends_on:
+      - mongo1
+
+networks:
+  mongodb_network:
+    driver: bridge
+
+volumes:
+  mongo1:
+    driver: local
+  mongo2:
+    driver: local
+  mongo3:
+    driver: local
+
