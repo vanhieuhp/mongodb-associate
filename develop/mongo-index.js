@@ -24,4 +24,4 @@ db.people.find({
     dob: {$gte: new Date("1988"), $lte: new Date("1990")}, inactive: false
 }).sort({score: -1}).explain('executionStats').executionStats
 
-db.people.createIndex({inactive: 1, dob: 1, score: -1})
+db.people.createIndex({inactive: 1, dob: 1, score: -1})mongodb-cluster_mongodb_network

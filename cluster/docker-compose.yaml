@@ -5,9 +5,10 @@ services:
     container_name: mongo1
     image: bitnami/mongodb:7.0.14
     volumes:
-      - mongo1:/bitnami/mongodb
+      - mongodb1:/bitnami/mongodb
       - ./config/mongo1.conf:/opt/bitnami/mongodb/conf/mongodb.conf
       - ./config/mongodb-keyfile:/opt/bitnami/mongodb/keyfile
+      - mongologs:/opt/bitnami/mongodb/logs
     networks:
       - mongodb_network
     ports:
@@ -18,9 +19,10 @@ services:
     container_name: mongo2
     image: bitnami/mongodb:7.0.14
     volumes:
-      - mongo2:/bitnami/mongodb
+      - mongodb2:/bitnami/mongodb
       - ./config/mongo2.conf:/opt/bitnami/mongodb/conf/mongodb.conf
       - ./config/mongodb-keyfile:/opt/bitnami/mongodb/keyfile
+      - mongologs:/opt/bitnami/mongodb/logs
     networks:
       - mongodb_network
     ports:
@@ -33,9 +35,10 @@ services:
     container_name: mongo3
     image: bitnami/mongodb:7.0.14
     volumes:
-      - mongo3:/bitnami/mongodb
+      - mongodb3:/bitnami/mongodb
       - ./config/mongo3.conf:/opt/bitnami/mongodb/conf/mongodb.conf
       - ./config/mongodb-keyfile:/opt/bitnami/mongodb/keyfile
+      - mongologs:/opt/bitnami/mongodb/logs
     networks:
       - mongodb_network
     ports:
@@ -46,13 +49,20 @@ services:
 
 networks:
   mongodb_network:
+    name: mongodb_network
     driver: bridge
 
 volumes:
-  mongo1:
+  mongodb1:
+    name: mongodb1
     driver: local
-  mongo2:
+  mongodb2:
+    name: mongodb2
     driver: local
-  mongo3:
+  mongodb3:
+    name: mongodb3
+    driver: local
+  mongologs:
+    name: mongologs
     driver: local
 
