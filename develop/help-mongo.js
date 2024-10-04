@@ -12,7 +12,10 @@ rs.initiate(
         ]
     }
 )
+
+config = rs.conf()
 config.members[0].priority = 10
+rs.reconfig(config)
 // openssl
 // rand - base64
 // 756 > config / mongod - keyfile

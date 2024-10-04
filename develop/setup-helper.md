@@ -56,6 +56,10 @@ db.createUser({
    ]
  })
 
+db.auth("dba-admin", passwordPrompt())
+show users
+db.adminCommand({usersInfo: "dba-admin"})
+
 
 ### Write Concern
 db.cats.insertOne(
@@ -73,3 +77,33 @@ db.adminCommand({
 
 ### Customization slow query
 db.setProfilingLevel(1, {slowms: 30})
+
+mongodump --uri "mongodb://localhost:27017/?replicaSet=replicaset&directConnection=true" --db=test --out=./mongo-test --gzip --archive 
+
+mongodump --uri="mongodb://localhost:27017/?replicaSet=replicaset&directConnection=true" --db=test --gzip --archive=./mongo-test-dump.gz
+
+
+### Mongodb logs management
+db.serverCmdLineOpts().parsed.systemLog.path
+show logs
+show log global
+
+### Mongodb backup
+1. Create a Snapshot
+db.fsyncLock()
+sudo lvcreate -L 10G --snapshot --name mdb-snapshot /dev/vg0/mdb
+sudo lvs
+sudo mount /dev/vg0/mdb-snapshot /mnt/mdb-snapshot
+db.fsyncUnlock()
+sudo dd status=progress if=/dev/vg0/mdb-snapshot | gzip > mdb-snapshot.gz
+
+2. Restore the Archived Snapshot
+sudo lvcreate --size 1G --name mdb-new vg0;
+gzip -d -c mdb-snapshot.gz | sudo dd status=progress of=/dev/vg0/mdb-new
+sudo systemctl stop -l mongod; sudo systemctl status -l mongod;
+sudo rm -r /var/lib/mongodb/*
+sudo umount /var/lib/mongodb
+sudo mount /dev/vg0/mdb-new /var/lib/mongodb
+sudo systemctl start -l mongod; sudo systemctl status -l mongod;
+mongosh
+show dbs
